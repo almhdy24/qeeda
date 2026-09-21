@@ -320,7 +320,11 @@ class _SourceTextCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          Text(text, style: const TextStyle(fontSize: 13, height: 1.5)),
+          Text(
+            text,
+            textDirection: TextDirection.rtl,
+            style: const TextStyle(fontSize: 13, height: 1.5),
+          ),
         ],
       ),
     );

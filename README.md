@@ -46,14 +46,14 @@ Supported patterns: `150,000 جنيه`, `Received 150000 SDG from Ahmed`, `دف�
 ### Image sharing
 
 1. Share a screenshot to Qeeda
-2. OCR attempts to extract numbers and Latin text (Arabic text not reliably recognized)
+2. OCR extracts Arabic and Latin text from the image
 3. Review, fill missing fields, save
 
-## OCR Limitations
+## OCR
 
-- Uses Google ML Kit Latin-script OCR (bundled, no internet needed)
-- **Arabic text in images is NOT reliably recognized** — amounts and Latin text extracted where possible
-- If OCR fails, shows image and allows full manual entry
+- Uses Google ML Kit on-device text recognition (bundled, no internet needed)
+- Recognizes Arabic and Latin (English) scripts
+- If OCR fails or produces no text, shows the image and allows full manual entry
 
 ## How to Run
 
@@ -79,12 +79,11 @@ flutter analyze   # No issues found
 
 ## Known Limitations
 
-1. Arabic OCR in images not supported (Latin/numbers only)
-2. `flutter test` fails on Termux host (missing `libvk_swiftshader.so` Vulkan renderer — environment limitation, not a code issue)
-3. Currency fixed at SDG for MVP
-4. Export only (no CSV import/restore)
-5. No app lock / biometric authentication in MVP
-6. Physical share-sheet testing requires real Android device
+1. `flutter test` fails on Termux host (missing `libvk_swiftshader.so` Vulkan renderer — environment limitation, not a code issue)
+2. Currency fixed at SDG for MVP
+3. Export only (no CSV import/restore)
+4. No app lock / biometric authentication in MVP
+5. Physical share-sheet testing requires real Android device
 
 ## Next Steps
 

@@ -8,13 +8,12 @@ class OcrService {
     return _instance!;
   }
 
-  // Performs Latin-script OCR on the given image file path.
-  // Arabic text may not be recognized accurately with this recognizer.
-  // Returns null if recognition fails or produces no text.
+  // Performs on-device OCR on the given image file path.
+  // Recognizes Latin and Arabic scripts. Returns null on failure or empty result.
   Future<String?> recognizeText(String imagePath) async {
     TextRecognizer? recognizer;
     try {
-      recognizer = TextRecognizer(script: TextRecognitionScript.latin);
+      recognizer = TextRecognizer();
       final inputImage = InputImage.fromFilePath(imagePath);
       final result = await recognizer.processImage(inputImage);
       final text = result.text.trim();

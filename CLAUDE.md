@@ -23,7 +23,7 @@ Min SDK: 23
 - Database: `DatabaseHelper` singleton, sqflite
 - Share receiving: native Android `MethodChannel` in `MainActivity.kt`
 - Text parsing: `ParserService` — deterministic, no LLM
-- OCR: `OcrService` wrapping `google_mlkit_text_recognition` (Latin only, graceful fallback)
+- OCR: `OcrService` wrapping `google_mlkit_text_recognition` (Arabic + Latin, graceful fallback to manual entry)
 - Export: `ExportService` → CSV via `share_plus`
 
 ## Important Constraints

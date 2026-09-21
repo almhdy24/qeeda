@@ -1,0 +1,72 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Java 17 is required: build.gradle.kts targets JavaVersion.VERSION_17
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Cache Gradle wrapper and caches to speed up consecutive runs
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      # Flutter 3.41.9 / Dart 3.11.x matches local dev environment and
+      # satisfies pubspec.yaml sdk: ^3.11.5.
+      # AGP 8.11.1 + Kotlin 2.2.20 + Gradle 8.14 require Flutter 3.41+.
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: stable
+          cache: true
+
+      # sqflite_common_ffi (used in tests) calls libsqlite3.so.0 via dart:ffi.
+      # Ubuntu runners include libsqlite3-0 by default; install dev headers for
+      # the symlink that some loader variants look for.
+      - name: Install sqlite3 libraries
+        run: sudo apt-get install -y libsqlite3-0 libsqlite3-dev
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Rename APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/qeeeda-mvp.apk
+
+      - name: Verify APK
+        run: ls -lh build/app/outputs/flutter-apk/qeeeda-mvp.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qeeeda-android-apk
+          path: build/app/outputs/flutter-apk/qeeeda-mvp.apk
+          retention-days: 30
